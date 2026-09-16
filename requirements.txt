@@ -10,3 +10,6 @@ statsmodels
 PyYAML
 scipy
 joblib
+fastapi
+pydantic
+
