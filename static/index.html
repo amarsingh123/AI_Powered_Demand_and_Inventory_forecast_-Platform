@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalesIQ — Real-Time Analytics Platform</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+<link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="backdrop" id="backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse-btn" id="collapseBtn" title="Collapse sidebar">«</button>
+
+    <div class="brand">
+      <div class="brand-icon">📊</div>
+      <div class="brand-text">
+        <div class="brand-title">SalesIQ</div>
+        <div class="brand-sub">Real-Time Analytics Platform</div>
+      </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <div class="user-card">
+      <div class="user-avatar">🔵</div>
+      <div class="user-meta">
+        <div class="user-name">Admin</div>
+        <div class="user-role">Admin</div>
+      </div>
+    </div>
+
+    <ul class="nav-list" id="navList">
+      <li class="nav-item active" data-view="dashboard"><span class="nav-icon">📶</span><span class="nav-label">Dashboard</span></li>
+      <li class="nav-item" data-view="forecasting"><span class="nav-icon">🔮</span><span class="nav-label">Sales Forecasting</span></li>
+      <li class="nav-item" data-view="segments"><span class="nav-icon">🎯</span><span class="nav-label">Customer Segments</span></li>
+      <li class="nav-item" data-view="recommendations"><span class="nav-icon">🛍️</span><span class="nav-label">Recommendations</span></li>
+      <li class="nav-item" data-view="inventory"><span class="nav-icon">📦</span><span class="nav-label">Inventory &amp; Demand</span></li>
+      <li class="nav-item" data-view="alerts"><span class="nav-icon">🚨</span><span class="nav-label">KPI Alerts</span></li>
+      <li class="nav-item" data-view="admin"><span class="nav-icon">⚙️</span><span class="nav-label">Admin Panel</span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="theme-toggle" id="themeToggle">
+        <span class="tt-label">Dark mode</span>
+        <span id="themeIcon">🌙</span>
+      </div>
+      <button class="signout-btn" id="signOutBtn">⏻ <span class="so-label">Sign Out</span></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-header">
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    </div>
+
+    <div id="views">
+
+      <!-- ============================= DASHBOARD ============================= -->
+      <section class="view active" id="view-dashboard">
+        <div class="page-title"><span class="pt-icon">📶</span>Sales Dashboard</div>
+        <div class="page-sub">Live revenue, orders and category performance at a glance.</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Period</label>
+            <select id="dashPeriod">
+              <option value="7">7 days</option>
+              <option value="30" selected>30 days</option>
+              <option value="90">90 days</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 style="margin:0 0 14px;font-size:15px;">Key Performance Indicators</h3>
+        <div class="kpi-grid" id="dashKpis"></div>
+
+        <div class="row-1-2">
+          <div class="card">
+            <div class="card-title">📈 Daily Revenue Trend</div>
+            <div class="chart-box"><canvas id="chartDailyTrend"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🟠 Revenue by Category</div>
+            <div class="chart-box"><canvas id="chartRevByCategory"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= SALES FORECASTING ============================= -->
+      <section class="view" id="view-forecasting">
+        <div class="page-title"><span class="pt-icon">🔮</span>Sales Forecasting</div>
+        <div class="page-sub">Machine learning forecast of future daily revenue using historical patterns.</div>
+
+        <div class="card">
+          <div class="field-row" style="margin-bottom:0;">
+            <div class="field">
+              <label>Model</label>
+              <select id="fcModel">
+                <option value="rf" selected>Random Forest</option>
+                <option value="xgb">XGBoost</option>
+                <option value="ridge">Ridge Regression</option>
+              </select>
+            </div>
+            <div class="field" style="min-width:220px;">
+              <label>Forecast horizon (days): <span class="range-value" id="fcHorizonVal">30</span></label>
+              <input type="range" id="fcHorizon" min="7" max="60" value="30">
+            </div>
+            <div class="field">
+              <label>Training history</label>
+              <select id="fcHistory">
+                <option value="90">90 days</option>
+                <option value="180">180 days</option>
+                <option value="270" selected>270 days (max)</option>
+              </select>
+            </div>
+            <div class="field" style="min-width:160px;">
+              <button class="btn btn-primary btn-block" id="fcRunBtn">🚀 Run Forecast</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="fcResults" style="display:none;">
+          <div class="kpi-grid three-col" style="margin-top:20px;" id="fcMetrics"></div>
+
+          <div class="card">
+            <div class="card-title">📈 Revenue Forecast</div>
+            <div class="chart-box tall"><canvas id="chartForecast"></canvas></div>
+          </div>
+
+          <div class="row-1-2">
+            <div class="card">
+              <div class="card-title">📋 Forecast Table</div>
+              <div class="table-wrap" style="max-height:320px;overflow-y:auto;">
+                <table>
+                  <thead><tr><th>Date</th><th>Forecast</th></tr></thead>
+                  <tbody id="fcTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">🔍 Feature Importance (Top 15)</div>
+              <div class="chart-box tall"><canvas id="chartFeatureImportance"></canvas></div>
+            </div>
+          </div>
+          <p class="eyebrow-note">rf_model.pkl / xgb_model.pkl are pre-trained artifacts reused for this demo; their raw output is calibrated to this store's revenue scale via a holdout linear fit since the original label encoders weren't shipped with the models.</p>
+        </div>
+        <div class="empty-state" id="fcEmpty">Choose a model and click "Run Forecast" to generate a revenue forecast.</div>
+      </section>
+
+      <!-- ============================= CUSTOMER SEGMENTS ============================= -->
+      <section class="view" id="view-segments">
+        <div class="page-title"><span class="pt-icon">🎯</span>Customer Segmentation (RFM Analysis)</div>
+        <div class="page-sub">Segments customers using Recency, Frequency &amp; Monetary value with KMeans clustering.</div>
+
+        <div class="card">
+          <div class="field" style="max-width:420px;">
+            <label>Number of segments: <span class="range-value" id="segKVal">4</span></label>
+            <input type="range" id="segK" min="2" max="6" value="4">
+          </div>
+        </div>
+
+        <h3 style="margin:20px 0 14px;font-size:15px;">Segment Overview</h3>
+        <div class="seg-grid" id="segGrid"></div>
+
+        <div class="row-2">
+          <div class="card">
+            <div class="card-title">🗺️ Cluster Map (PCA)</div>
+            <div class="chart-box tall"><canvas id="chartClusterMap"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">💰 Revenue by Segment</div>
+            <div class="chart-box tall"><canvas id="chartRevBySegment"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= RECOMMENDATIONS ============================= -->
+      <section class="view" id="view-recommendations">
+        <div class="page-title"><span class="pt-icon">🛍️</span>Product Recommendation Engine</div>
+        <div class="page-sub">Item-item collaborative filtering based on purchase history cosine similarity.</div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="customer">👤 Customer Recommendations</button>
+          <button class="tab-btn" data-tab="similar">🔗 Similar Products</button>
+        </div>
+
+        <div class="card" id="tab-customer">
+          <div class="field-row">
+            <div class="field" style="min-width:260px;">
+              <label>Select Customer</label>
+              <select id="recoCustomerSelect"></select>
+            </div>
+            <div class="field">
+              <label>No. of recommendations</label>
+              <div class="stepper">
+                <button id="recoNMinus">−</button><span id="recoNVal">5</span><button id="recoNPlus">+</button>
+              </div>
+            </div>
+            <div class="field" style="min-width:200px;">
+              <button class="btn btn-primary btn-block" id="recoGetBtn">✨ Get Recommendations</button>
+            </div>
+          </div>
+          <div class="eyebrow-note" id="recoPurchasedNote" style="margin-bottom:14px;"></div>
+
+          <h3 style="margin:6px 0 14px;font-size:15px;" id="recoTitle">🎁 Top Recommendations</h3>
+          <div class="reco-grid" id="recoGrid"></div>
+          <div class="card-title" id="recoScoresTitle" style="display:none;">📊 Recommendation Scores</div>
+          <div class="chart-box" id="recoScoresBox" style="display:none;"><canvas id="chartRecoScores"></canvas></div>
+        </div>
+
+        <div class="card" id="tab-similar" style="display:none;">
+          <div class="field-row">
+            <div class="field" style="min-width:260px;">
+              <label>Select Product</label>
+              <select id="simProductSelect"></select>
+            </div>
+            <div class="field">
+              <label>No. of results</label>
+              <div class="stepper">
+                <button id="simNMinus">−</button><span id="simNVal">5</span><button id="simNPlus">+</button>
+              </div>
+            </div>
+            <div class="field" style="min-width:200px;">
+              <button class="btn btn-primary btn-block" id="simGetBtn">✨ Find Similar</button>
+            </div>
+          </div>
+          <h3 style="margin:6px 0 14px;font-size:15px;">🔗 Similar Products</h3>
+          <div class="reco-grid" id="simGrid"></div>
+        </div>
+      </section>
+
+      <!-- ============================= INVENTORY & DEMAND ============================= -->
+      <section class="view" id="view-inventory">
+        <div class="page-title"><span class="pt-icon">📦</span>Inventory &amp; Demand Prediction</div>
+        <div class="page-sub">Predicts per-product demand using ML and flags low-stock risks.</div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="stock">📊 Stock Overview</button>
+          <button class="tab-btn" data-tab="demand">🔮 Demand Forecast</button>
+        </div>
+
+        <div id="tab-stock">
+          <div class="kpi-grid" id="invKpis"></div>
+          <div class="row-2">
+            <div class="card">
+              <div class="card-title">🔴 Low Stock Products</div>
+              <div class="chart-box short"><canvas id="chartLowStock"></canvas></div>
+            </div>
+            <div class="card">
+              <div class="card-title">🗂️ Stock by Category</div>
+              <div class="treemap" id="treemap"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-demand" style="display:none;">
+          <div class="card">
+            <div class="field-row" style="margin-bottom:0;">
+              <div class="field" style="min-width:260px;">
+                <label>Select Product</label>
+                <select id="invProductSelect"></select>
+              </div>
+              <div class="field" style="min-width:220px;">
+                <label>Forecast days: <span class="range-value" id="invDaysVal">14</span></label>
+                <input type="range" id="invDays" min="7" max="30" value="14">
+              </div>
+              <div class="field">
+                <label>Model</label>
+                <select id="invModel">
+                  <option value="rf" selected>Random Forest</option>
+                  <option value="xgb">XGBoost</option>
+                  <option value="ridge">Ridge Regression</option>
+                </select>
+              </div>
+              <div class="field" style="min-width:180px;">
+                <button class="btn btn-primary btn-block" id="invForecastBtn">📈 Forecast Demand</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="invResults" style="display:none;">
+            <div class="kpi-grid three-col" style="margin-top:20px;" id="invMetrics"></div>
+            <div class="eyebrow-note" id="invMaeNote" style="margin:-6px 0 16px;"></div>
+            <div class="card">
+              <div class="card-title" id="invChartTitle">📈 Demand Forecast</div>
+              <div class="chart-box tall"><canvas id="chartInvForecast"></canvas></div>
+            </div>
+          </div>
+          <div class="empty-state" id="invEmpty">Select a product and click "Forecast Demand".</div>
+        </div>
+      </section>
+
+      <!-- ============================= KPI ALERTS ============================= -->
+      <section class="view" id="view-alerts">
+        <div class="page-title"><span class="pt-icon">🚨</span>KPI Monitoring &amp; Alerts</div>
+        <div class="page-sub">Automated threshold monitoring with real-time alert detection.</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Show alerts from last</label>
+            <select id="alertDays">
+              <option value="1">1 day</option>
+              <option value="7" selected>7 days</option>
+              <option value="30">30 days</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="checkbox-row"><input type="checkbox" id="alertShowResolved"> Show resolved alerts</label>
+          </div>
+          <div class="field" style="min-width:180px;">
+            <button class="btn btn-primary btn-block" id="alertRunBtn">🔎 Run KPI Check</button>
+          </div>
+        </div>
+
+        <h3 style="margin:6px 0 14px;font-size:15px;">Alert Summary</h3>
+        <div class="kpi-grid" id="alertSummary"></div>
+
+        <div class="row-2">
+          <div class="card">
+            <div class="card-title">📊 Alert Trend</div>
+            <div class="chart-box"><canvas id="chartAlertTrend"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🥯 Alert Type Distribution</div>
+            <div class="chart-box"><canvas id="chartAlertDist"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📋 Active Alerts</div>
+          <div id="alertsList"></div>
+        </div>
+      </section>
+
+      <!-- ============================= ADMIN PANEL ============================= -->
+      <section class="view" id="view-admin">
+        <div class="page-title"><span class="pt-icon">⚙️</span>Admin Panel</div>
+        <div class="page-sub">Manage users and inspect platform data.</div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="users">👥 User Management</button>
+          <button class="tab-btn" data-tab="stats">🗄️ Database Stats</button>
+        </div>
+
+        <div id="tab-users">
+          <div class="card">
+            <div class="card-title">Registered Users</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>username</th><th>role</th><th>created_at</th></tr></thead>
+                <tbody id="usersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Add New User</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Username</label>
+                <input type="text" id="newUsername" placeholder="e.g. analyst1">
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <input type="password" id="newPassword" placeholder="••••••••">
+              </div>
+              <div class="field">
+                <label>Role</label>
+                <select id="newRole">
+                  <option value="Manager" selected>Manager</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Analyst">Analyst</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="createUserBtn">➕ Create User</button>
+          </div>
+        </div>
+
+        <div id="tab-stats" style="display:none;">
+          <div class="kpi-grid" id="adminStatsGrid"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.min.js"></script>
+<script src="../static/js/app.js"></script>
+</body>
+</html>
