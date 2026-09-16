@@ -1,0 +1,21 @@
+,product,category,total_revenue,total_units,avg_unit_price,revenue_pct,cumulative_pct,abc_class
+0,Laptop,Electronics,1641928475.0,79954,45000.0,15.95,15.95,A
+1,Smartphone,Electronics,1636417515.0,200568,15000.0,15.89,31.84,A
+2,Smart Watch,Electronics,1468470965.0,240556,8000.0,14.26,46.1,A
+3,Earbuds,Electronics,1078842805.0,479341,2500.0,10.48,56.58,A
+4,Sports Shoes,Clothing,578365692.49,303721,1999.0,5.62,62.2,A
+5,Mixer Grinder,Home & Kitchen,466209975.0,139912,3500.0,4.53,66.73,A
+6,Women Kurti,Clothing,454991730.29,531867,899.0,4.42,71.15,B
+7,Men T-Shirt,Clothing,345739427.63,605733,599.0,3.36,74.51,B
+8,Rice (5kg),Grocery,325455217.5,1364357,250.0,3.16,77.67,B
+9,Pressure Cooker,Home & Kitchen,299070165.0,209443,1500.0,2.9,80.57,B
+10,Kids Jeans,Clothing,288405154.36,379536,799.0,2.8,83.37,B
+11,Wheat Flour (5kg),Grocery,286236738.0,1497700,200.0,2.78,86.15,B
+12,Non-Stick Pan,Home & Kitchen,240342888.0,315752,800.0,2.33,88.48,B
+13,Water Bottle,Home & Kitchen,210092078.0,630793,350.0,2.04,90.52,C
+14,Dal (1kg),Grocery,195616053.6,1704447,120.0,1.9,92.42,C
+15,Cooking Oil (1L),Grocery,175194649.5,1223149,150.0,1.7,94.12,C
+16,Shampoo (200ml),Personal Care,170916609.6,989393,180.0,1.66,95.78,C
+17,Moisturizer,Personal Care,158930610.0,662257,250.0,1.54,97.32,C
+18,Toothpaste,Personal Care,152728784.0,1986534,80.0,1.48,98.8,C
+19,Face Wash,Personal Care,122080974.0,1060569,120.0,1.19,99.99,C

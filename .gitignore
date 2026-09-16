@@ -25,14 +25,14 @@ models/
 *.onnx
 
 # Generated outputs
-outputs/
-reports/
+#outputs/
+#reports/
 
 # Data
-Data/
-*.csv
-*.xlsx
-*.parquet
+#Data/
+#*.csv
+#*.xlsx
+#*.parquet
 
 # IDE
 .vscode/
