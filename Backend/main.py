@@ -13,11 +13,9 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
-
 from data import get_dataset
 import ml
-import pickle
-import joblib
+
 BASE_DIR = Path(__file__).parent
 STATIC_DIR = BASE_DIR.parent / "static"
 
