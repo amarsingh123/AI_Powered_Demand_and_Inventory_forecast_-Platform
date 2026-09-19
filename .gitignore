@@ -15,14 +15,14 @@ env/
 .env
 .env.*
 
-# ML models
-models/
-*.pkl
-*.joblib
-*.h5
-*.pt
-*.pth
-*.onnx
+# # ML models
+# models/
+# *.pkl
+# *.joblib
+# *.h5
+# *.pt
+# *.pth
+# *.onnx
 
 # Generated outputs
 #outputs/
