@@ -38,10 +38,10 @@ _XGB = None
 def _load_models():
     global _RF, _XGB
     if _RF is None:
-        _RF = joblib.load(BASE_DIR  / "models" / "rf_model.pkl")
+        _RF = joblib.load(BASE_DIR.parent  / "models" / "rf_model.pkl")
     if _XGB is None:
         import pickle
-        with open(BASE_DIR  / "models" / "xgb_model.pkl", "rb") as f:
+        with open(BASE_DIR.parent  / "models" / "xgb_model.pkl", "rb") as f:
             _XGB = pickle.load(f)
     return _RF, _XGB
 
